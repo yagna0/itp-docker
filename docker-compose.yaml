@@ -1,0 +1,40 @@
+#fp-svc
+#builds your Dockerfile, names the image, adds a context and an additional contextLinks to an external site. for your git repo (that is used in your Dockerfile) named final-project.
+#name the container
+#expose to localhost on 8081
+#use 2 volumes: 1 for the nginx conf file and 1 for the conf.d folder
+
+services:
+  fp-svc:
+    build:
+      context: .
+      additional_contexts:
+          - final-project=https://github.com/yagna0/mypages.git
+    image: yagna0/final-project-image:docker-compose-build-tag
+    container_name: fp-c
+    ports:
+      - 8081:7901
+    volumes:
+      - ./volumes/final-project/config/conf.d:/etc/nginx/conf.d
+      - ./volumes/final-project/config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - hp-svc
+
+  hp-svc:
+    image: nginx:alpine3.21
+    container_name: hp-c
+    volumes:
+      - ./volumes/home-page/config/conf.d:/etc/nginx/conf.d
+      - ./volumes/home-page/config/nginx.conf:/etc/nginx/nginx.conf
+      - ./volumes/home-page/config/html:/usr/share/nginx/html
+
+  watchdog-svc:
+    image: nginx:alpine3.21
+    container_name: watchdog-c
+    # -it
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    depends_on:
+      - fp-svc
+   
