@@ -2,11 +2,6 @@
 This is a local deployment to serve the Github pages app of [yagna0.github.io/mypages](http://yagna0.github.io/mypages)
 
 ## Architecture
-should explain the architecture of your app when a request comes in to localhost:8081,
-where dose it go?
-how service connected
-who serve what html?
-where is the html coming from?
 - request to 'http://localhost:8081' get routed to the fp-svc which has a webserver on port 7901
 - for 'http://fp-svc:7901/', the container proxies to 'http://hp-svc:6969/'
 - for 'http://fp-svc:7901/mypages', the container serve the pages site stored inside the image at /'/usr/share/nginx/html' (this game from a git Repo)
@@ -32,8 +27,27 @@ chmod +x scripts\init.sh;
 2. To up the compose stack:
 ```bash
     docker compose up -d;
+
 ```    
-3. TO Down the compose stack:
+3. Visit the homepage by going to [localhost:8081](http://localhost:8081)
+in the browser.
+
+4. Click the link you find on the homepage.
+5. To monitor services, attach to the watchdog and curl different services.
+```bash
+docker compose attach watchdog-svc:
+```
+(from inside watchdog-c)
+```sh
+apk add curl;
+curl http://fp-svc:7901; #proxied to http://hp-svc:6969/ (homepage)
+curl http://hp-svc:6969/; # hits http://hp-svc:6969/ (homepage)
+curl http://fp-svc:7901/mypages/ #hits the pages site (mypages)
+
+```
+use `ctrl-d` to exit and restart that main shell process.
+
+6. To down the compose stack:
 ```bash
     docker compose down;
 ```   
