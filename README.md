@@ -39,7 +39,7 @@ chmod +x scripts\init.sh;
 ```   
 
 ## Mannually added updates as following
--
+- final-project/default.conf
 
 ```
 listen     7901;
@@ -48,9 +48,9 @@ listen [::]:7901; server_name localhost;
 location /
  { proxy_pass http://hp-svc:6969; } 
 
-location /mypages { alias /usr/share/nginx/html;
- index index.html index.htm;
-
+location /mypages{
+        alias  /usr/share/nginx/html;
+        index  index.html index.htm;
 }
 ```
 
@@ -60,5 +60,6 @@ listen 6969;
 listen [::]:6969; server_name localhost;
 
 
-location / { root /usr/share/nginx/html;
- index index.html index.htm; }```
+location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;}
