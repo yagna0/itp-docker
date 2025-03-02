@@ -1,11 +1,8 @@
-# Docker static App Delployment
-This is a local deployment to serve the Github pages app of [yagna0.github.io/mypages](http://yagna0.github.io/mypages)
 
 ## Architecture
-- request to 'http://localhost:8081' get routed to the fp-svc which has a webserver on port 7901
-- for 'http://fp-svc:7901/', the container proxies to 'http://hp-svc:6969/'
-- for 'http://fp-svc:7901/mypages', the container serve the pages site stored inside the image at /'/usr/share/nginx/html' (this game from a git Repo)
-- for 'hp-svc' serves a landing page on port '6969' that comes from a volume and has a link to 'http://localhost:8081/mypages/'
+- request to 'http://localhost:8089' get handled
+by the `http-svc`
+- if it wncounters php files, it executes them using the`php-svc` over the docker netwoek on port `9000`
 
 ## Perequisites
 
@@ -29,51 +26,15 @@ chmod +x scripts\init.sh;
     docker compose up -d;
 
 ```    
-3. Visit the homepage by going to [localhost:8081](http://localhost:8081)
+3. Visit the homepage by going to [localhost:8089](http://localhost:8089)
 in the browser.
 
-4. Click the link you find on the homepage.
+4. Click the link you find on the homepage.You shold see the PHP info with some purple coloring.
 5. To monitor services, attach to the watchdog and curl different services.
 ```bash
-docker compose attach watchdog-svc:
+docker compose up -d
 ```
-(from inside watchdog-c)
-```sh
-apk add curl;
-curl http://fp-svc:7901; #proxied to http://hp-svc:6969/ (homepage)
-curl http://hp-svc:6969/; # hits http://hp-svc:6969/ (homepage)
-curl http://fp-svc:7901/mypages/ #hits the pages site (mypages)
-
-```
-use `ctrl-d` to exit and restart that main shell process.
-
 6. To down the compose stack:
 ```bash
-    docker compose down;
+ docker compose down;
 ```   
-
-## Mannually added updates as following
-- final-project/default.conf
-
-```
-listen     7901;
-listen [::]:7901; server_name localhost;
-
-location /
- { proxy_pass http://hp-svc:6969; } 
-
-location /mypages{
-        alias  /usr/share/nginx/html;
-        index  index.html index.htm;
-}
-```
-
-- home-page/default.conf
-```
-listen 6969;
-listen [::]:6969; server_name localhost;
-
-
-location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;}
