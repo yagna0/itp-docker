@@ -23,7 +23,13 @@ chmod +x scripts\init.sh;
 ./scripts/init.sh;
 ```
 
-2. Visit the homepage by going to [localhost:8089](http://localhost:8089)
+2. To up the compose stack:
+```bash
+    docker compose up -d;
+
+```    
+<<<<<<< HEAD
+3. Visit the homepage by going to [localhost:8089](http://localhost:8089)
 in the browser.
 
 3. Visit the homepage by going to localhost:8089 in the browser.
@@ -38,4 +44,7 @@ docker compose up -d
 ```bash
  docker compose down;
 ```   
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4b8381e (trying resolve 404 error)
