@@ -1,17 +1,30 @@
 #!/bin/sh
 
+<<<<<<< HEAD
 
 mkdir -p volumes/{config,html}
 rm -rf volumes/{config,html}/*
 
 
+=======
+mkdir -p volumes/{config,html}
+rm -rf volumes/config/*
+
+
+>>>>>>> 4b8381e (trying resolve 404 error)
 docker run --rm --name temp-nginx -d nginx:alpine3.21
 
 
 docker cp temp-nginx:/etc/nginx/conf.d volumes/config
+<<<<<<< HEAD
 docker cp temp-nginx:/etc/nginx/nginx.conf volumes/config/nginx.conf
 
 docker cp temp-nginx:/usr/share/nginx/html volumes/html
+=======
+docker cp temp-nginx:/etc/nginx/nginx.conf volumes/config
+
+docker cp temp-nginx:/usr/share/nginx/html volumes
+>>>>>>> 4b8381e (trying resolve 404 error)
 
 docker stop temp-nginx
 
