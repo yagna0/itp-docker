@@ -1,44 +1,26 @@
 #!/bin/sh
 
-<<<<<<< HEAD
+# Create necessary directories
+mkdir -p volumes/config volumes/html
+rm -rf volumes/config/* volumes/html/*  # Ensure html is cleared properly
 
-mkdir -p volumes/{config,html}
-rm -rf volumes/{config,html}/*
-
-
-=======
-mkdir -p volumes/{config,html}
-rm -rf volumes/config/*
-
-
->>>>>>> 4b8381e (trying resolve 404 error)
+# Run a temporary Nginx container
 docker run --rm --name temp-nginx -d nginx:alpine3.21
 
-
+# Copy configuration and HTML files from the container
 docker cp temp-nginx:/etc/nginx/conf.d volumes/config
-<<<<<<< HEAD
 docker cp temp-nginx:/etc/nginx/nginx.conf volumes/config/nginx.conf
+docker cp temp-nginx:/usr/share/nginx/html/. volumes/html/  # Copy contents only
 
-docker cp temp-nginx:/usr/share/nginx/html volumes/html
-=======
-docker cp temp-nginx:/etc/nginx/nginx.conf volumes/config
-
-docker cp temp-nginx:/usr/share/nginx/html volumes
->>>>>>> 4b8381e (trying resolve 404 error)
-
+# Stop the temporary container
 docker stop temp-nginx
 
+# Replace default files
 cp templates/home.html volumes/html/index.html
 cp templates/http.conf volumes/config/conf.d/default.conf
+
+# Ensure php-info path exists
 rm -rf volumes/html/php-info
 cp -r templates/html-php-info-path volumes/html/php-info
 
 exit 0
-
-NEW_HTML_BODY=$(cat <<EOF
-<body>
-    <P>please visit the <a href="/$FP_REPO_NAME/">$FP_REPO_NAME</a> page.</P>
-</body>
-
-EOF
-)   
