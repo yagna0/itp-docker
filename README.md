@@ -1,50 +1,33 @@
 
+# Docker Static App Deployment
+This is a local deployment to run server-side PHP on using FastCGI process Manager together with an NGINX web server.
 
 ## Architecture
-- request to 'http://localhost:8089' get handled
-by the `http-svc`
-- if it wncounters php files, it executes them using the`php-svc` over the docker netwoek on port `9000`
+- requests to `http://localhost:8089` get handled by the `http-svc`
+- if it encounters php files, is executes them using the `php-svc` over the docker network on port `9000`
+-php will talk to mysql over port `3311` when it needs to get todo data in the todo app
 
+## Prerequisties
+- Docker version 27.4.0, build bde2b89
+- sh shell with typing tools
 
-## Perequisites
-
-- Docker version (27.2.0, build 3ab4256)+
-- sh shell with typical tool and perl
-
-
-## Tsting notes
-- Tested on windows 11 home
-- Tsted with Docker version (27.2.0, build 3ab4256)
-- Tested with Git Bash
-## Usage
-1. Initialize the file structure and volumes.
+## Usage 
+1. Initialze the file structure and volumes.
 ```bash
-chmod +x scripts\init.sh;
-./scripts/init.sh;
+./scripts/init.sh
 ```
+2. After any modifing on your `init.sh` you should run `step 7` and then build image:
+    ```bash
+    docker build -t fpi:latest --build-context final-project=your-github-repo-address .
+    ```
+3. To up the compose stack:
+    ```bash
+    docker compose up -d
+    ```
+4. Visit the homepage by going to [localhost:8089](http://localhost:8089) in the browser.
+5. Click the link you find on the homepage. 
 
-2. To up the compose stack:
-```bash
-    docker compose up -d;
-
-```    
-<<<<<<< HEAD
-3. Visit the homepage by going to [localhost:8089](http://localhost:8089)
-in the browser.
-
-3. Visit the homepage by going to localhost:8089 in the browser.
-
-4. Click the link you find on the homepage.You shold see the PHP info with some purple coloring.
-
-5. To up the compse stack:
-```bash
-docker compose up -d
-```
-6. To down the compose stack:
-```bash
- docker compose down;
-```   
-<<<<<<< HEAD
-=======
-
->>>>>>> 4b8381e (trying resolve 404 error)
+6. To down the compose stack
+    ```bash
+    docker compose down
+    ```

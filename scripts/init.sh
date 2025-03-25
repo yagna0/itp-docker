@@ -1,25 +1,20 @@
 #!/bin/bash
 
-
-rm -rf volumes
-mkdir -p volumes/{http,html,db}
-mkdir -p volumes/http/config/conf.d  # Ensure conf.d exists
-mkdir -p volumes/db/{data,init}
-
-docker run --rm --name temp-nginx -d nginx:alpine3.21
+git clean -fdX
+cp -r volume-templates volumes
 
 
 
-docker cp temp-nginx:/etc/nginx/conf.d volumes/http/config 
-docker cp temp-nginx:/etc/nginx/nginx.conf volumes/http/config 
-docker cp temp-nginx:/usr/share/nginx/html volumes 
-docker stop temp-nginx
+PW_STARTER=$(docker run --rm alpine/openssl:3.3.3 rand -base64 64)
+
+PW1=$(echo $PW_STARTER | cut -c 1-10 | tr -d '\n')
+PW2=$(echo $PW_STARTER | cut -c 33-64 | tr -d '\n')
 
 
-cp templates/home.html volumes/html/index.html 
-cp templates/http.conf volumes/http/config/conf.d/default.conf 
-#cp templates/todos-app/todos-db.sql volumes/db/init/todos.sql
-cp templates/init/todos-db.sql volumes/db/init/todos.sql 
-
-cp -r templates/html-php-info-path volumes/html/php-info 
-
+echo "MYSQL_ROOT_PASSWORD='$PW1'" > ./mysql.env
+echo "MYSQL_DATABASE='php-app'" > ./php-and-mysql.env
+echo "MYSQL_USER='php-agent'" >> ./php-and-mysql.env
+echo "MYSQL_PASSWORD='$PW2'" >> ./php-and-mysql.env
+echo "MYSQL_TCP_PORT='3311'" >> ./php-and-mysql.env
+echo "MYSQL_HOST='db-svc'" >> ./php-and-mysql.env
+echo "TZ='America/Kentucky/Louisville'" >> ./php-and-mysql.env
